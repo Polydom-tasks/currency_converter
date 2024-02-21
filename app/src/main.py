@@ -32,7 +32,8 @@ async def get_currencies(currency_store: CurrencyStore = Depends(get_currency_st
 
 @app.post("/update_rates")
 async def update_exchange_rates(
-    currency_service: CurrencyService = Depends(get_currency_service), currency_store: CurrencyStore = Depends(get_currency_store)
+    currency_service: CurrencyService = Depends(get_currency_service),
+    currency_store: CurrencyStore = Depends(get_currency_store),
 ):
     exchange_rates = await currency_service.get_exchange_rates()
     await currency_store.update_currencies(exchange_rates)
@@ -40,13 +41,20 @@ async def update_exchange_rates(
 
 
 @app.get("/last_update")
-async def get_last_update_time(currency_store: CurrencyStore = Depends(get_currency_store)):
+async def get_last_update_time(
+    currency_store: CurrencyStore = Depends(get_currency_store),
+):
     currency = await currency_store.get_currency_by_code("USD")
     return {"updated_at": currency.updated_at}
 
 
 @app.get("/convert")
-async def convert_currency(source: str, target: str, amount: Decimal, currency_store: CurrencyStore = Depends(get_currency_store)):
+async def convert_currency(
+    source: str,
+    target: str,
+    amount: Decimal,
+    currency_store: CurrencyStore = Depends(get_currency_store),
+):
     source_currency = await currency_store.get_currency_by_code(source)
     if not source_currency:
         return HTTPException(404, {"error": "Source currency not found"})

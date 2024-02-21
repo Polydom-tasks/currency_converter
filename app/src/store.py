@@ -16,7 +16,9 @@ class CurrencyStore:
 
     async def get_currency_by_code(self, currency_code: str):
         async with self.session() as session:
-            result = await session.execute(select(Currency).where(Currency.code == currency_code))
+            result = await session.execute(
+                select(Currency).where(Currency.code == currency_code)
+            )
             return result.scalar()
 
     async def update_currencies(self, new_rates: dict[str, Decimal]):
@@ -24,7 +26,9 @@ class CurrencyStore:
             async with session.begin():
                 update_time = datetime.now()
                 for code, rate in new_rates.items():
-                    result = await session.execute(select(Currency).where(Currency.code == code))
+                    result = await session.execute(
+                        select(Currency).where(Currency.code == code)
+                    )
                     currency = result.scalar()
                     if currency:
                         currency.rate = rate
