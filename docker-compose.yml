@@ -25,6 +25,7 @@ services:
       - currency_converter_network
     depends_on:
       - db
+    restart: always
 
 networks:
   currency_converter_network:
